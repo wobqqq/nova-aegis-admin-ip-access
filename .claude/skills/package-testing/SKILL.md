@@ -19,7 +19,7 @@ license: MIT
 - Test what an administrator or a visitor sees: the status code and page a given address gets, the JSON the Aegis API answers, the dashboard line, the exit code and output of a command. Not private methods.
 - A security rule is a test: an address outside the list, the lock-out refusal, an invalid entry, a missing or broken view, a cache of another shape, a down cache store, a route outside Nova's groups.
 - Use documentation addresses only (`192.0.2.0/24`, `198.51.100.0/24`, `203.0.113.0/24`, `2001:db8::/32`).
-- A setting is saved through `SettingsRepository::save()` (or the API), never written to the table by hand, unless the test is about a stored row the rules would refuse.
+- A setting is saved through `Aegis::save()` (or the API), never written to the table by hand, unless the test is about a stored row the rules would refuse.
 - No test reaches the network.
 - Coverage stays at 90 % or more (`make test.coverage`).
 

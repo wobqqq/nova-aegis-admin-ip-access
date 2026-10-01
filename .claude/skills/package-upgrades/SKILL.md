@@ -17,12 +17,12 @@ Applications update the Aegis core and this module independently with Composer. 
 ## Constraints
 
 - `laravel/nova` stays `^5.0` and `laravel/framework` `^12.0`: whole majors. Supporting a new major is a minor release with both ranges and tests against both.
-- `wobqqq/nova-aegis` is `^1.0 || dev-main`. Until the core is on Packagist it comes from the `../nova-aegis` path repository; once it is, drop the path repository and `dev-main` in one pull request.
+- `wobqqq/nova-aegis` is `^1.1 || dev-main` (1.1 added `Aegis::save()`). Until the core is on Packagist it comes from the `../nova-aegis` path repository; once it is, drop the path repository and `dev-main` in one pull request.
 - The lock file is for development only (export-ignored); the ranges are what applications resolve.
 
 ## The core's contract
 
-- Use only the core's public API: `Aegis::module()`, `::check()`, `::settings()`, `Contracts\Module` and `Check`, `CheckResult`, `Field`, `Status`, `SettingsSaved`, `Support\Values`, `SettingsRepository::section()` / `save()`, the `aegis.cache_store` config key.
+- Use only the core's public API: `Aegis::module()`, `::check()`, `::settings()`, `::save()`, `Contracts\Module` and `Check`, `CheckResult`, `Field`, `Status`, `SettingsSaved`, `Support\Values`, the `aegis.cache_store` config key.
 - A newer core API is used only behind a check (`method_exists`, `class_exists`) with a fallback, so the module keeps working on every released core of the same major.
 - Never read or write the `aegis_settings` table directly; the arch test refuses it.
 

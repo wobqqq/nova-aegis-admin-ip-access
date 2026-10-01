@@ -6,7 +6,8 @@ namespace Wobqqq\AegisAdminIpAccess\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Validation\ValidationException;
-use Wobqqq\Aegis\Settings\SettingsRepository;
+use Wobqqq\Aegis\Aegis;
+use Wobqqq\Aegis\Support\Values;
 use Wobqqq\AegisAdminIpAccess\AccessList;
 use Wobqqq\AegisAdminIpAccess\AdminIpAccessModule;
 use Wobqqq\AegisAdminIpAccess\Support\Ip;
@@ -21,7 +22,7 @@ final class AddIpCommand extends Command
     /** @var string */
     protected $description = 'Add an IP address or a subnet to the Admin IP Access whitelist, for an administrator it locked out.';
 
-    public function handle(SettingsRepository $settings): int
+    public function handle(): int
     {
         $argument = $this->argument('ip');
         $ip = Ip::normalize($argument);
@@ -32,7 +33,7 @@ final class AddIpCommand extends Command
             return self::FAILURE;
         }
 
-        $values = $settings->section(AdminIpAccessModule::KEY);
+        $values = Aegis::settings(AdminIpAccessModule::KEY);
         $rows = AccessList::rows($values['ips'] ?? []);
 
         if (Ip::covered($ip, array_column($rows, 'ip'))) {
@@ -45,10 +46,10 @@ final class AddIpCommand extends Command
         $rows[] = ['ip' => $ip, 'note' => is_string($note) ? mb_substr(trim($note), 0, 100) : ''];
 
         try {
-            $settings->save(AdminIpAccessModule::KEY, [
+            Aegis::save(AdminIpAccessModule::KEY, [
                 'enabled' => AccessList::fromArray($values)->enabled,
                 'ips' => $rows,
-                'view' => AccessList::view(is_string($values['view'] ?? null) ? $values['view'] : ''),
+                'view' => AccessList::view(Values::string($values, 'view')),
             ]);
         } catch (ValidationException $e) {
             $this->components->error(implode(' ', $e->validator->errors()->all()));

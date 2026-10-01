@@ -51,7 +51,7 @@ The core is a separate package that applications update on their own schedule. U
 - `Aegis::settings('admin-ip-access')` reads it, cached by the core. The module never touches the table (an arch test refuses it).
 - `Aegis::check(new NovaRoutesCheck(...))` adds a line to the checks; `status()` adds the module's line to the dashboard.
 - `Wobqqq\Aegis\Events\SettingsSaved` clears the module's own cache when its section is saved.
-- `SettingsRepository::save()` is how the commands write, so their values pass the same rules.
+- `Aegis::save('admin-ip-access', ...)` is how the commands write, so their values pass the same rules.
 
 A newer core API is used only behind a check (`method_exists`, `class_exists`) with a fallback: the module must keep working with every released core of the same major.
 

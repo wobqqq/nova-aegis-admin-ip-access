@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use Illuminate\Http\Request;
 use Illuminate\Testing\TestResponse;
-use Wobqqq\Aegis\Settings\SettingsRepository;
+use Wobqqq\Aegis\Aegis;
 use Wobqqq\AegisAdminIpAccess\AdminIpAccessModule;
 use Wobqqq\AegisAdminIpAccess\Tests\Fixtures\Addresses;
 use Wobqqq\AegisAdminIpAccess\Tests\Fixtures\User;
@@ -31,7 +31,7 @@ function whitelist(array $values = []): array
 {
     app()->instance('request', Request::create('/'));
 
-    return resolve(SettingsRepository::class)->save(AdminIpAccessModule::KEY, $values + [
+    return Aegis::save(AdminIpAccessModule::KEY, $values + [
         'enabled' => true,
         'ips' => [['ip' => Addresses::ADMIN, 'note' => 'Office']],
         'view' => AdminIpAccessModule::DEFAULT_VIEW,
