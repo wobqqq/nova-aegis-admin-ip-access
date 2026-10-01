@@ -1,5 +1,6 @@
 # Aegis Admin IP Access
 
+[![CI](https://github.com/wobqqq/nova-aegis-admin-ip-access/actions/workflows/ci.yml/badge.svg)](https://github.com/wobqqq/nova-aegis-admin-ip-access/actions/workflows/ci.yml)
 [![Packagist](https://img.shields.io/packagist/v/wobqqq/nova-aegis-admin-ip-access)](https://packagist.org/packages/wobqqq/nova-aegis-admin-ip-access)
 [![PHP](https://img.shields.io/badge/PHP-8.2%2B-777bb4)](https://github.com/wobqqq/nova-aegis-admin-ip-access/blob/main/composer.json)
 [![PHPStan](https://img.shields.io/badge/PHPStan-level%20max-brightgreen)](https://github.com/wobqqq/nova-aegis-admin-ip-access/blob/main/phpstan.neon.dist)
@@ -24,7 +25,7 @@
 - PHP 8.2 or higher
 - Laravel 12
 - Laravel Nova 5
-- [Aegis](https://github.com/wobqqq/nova-aegis), installed with the module
+- [Aegis](https://github.com/wobqqq/nova-aegis) 1.1 or higher, installed with the module
 
 ## 📥 Installation
 
@@ -99,6 +100,8 @@ make code.check     # composer validate/audit, php -l, PHP CS Fixer, Rector, PHP
 make test.coverage  # Pest with coverage (90 % minimum)
 make ready          # everything above
 ```
+
+GitHub Actions runs the same checks; it needs the `NOVA_USERNAME` and `NOVA_LICENSE_KEY` repository secrets, and an `AEGIS_CORE_TOKEN` secret (a token that can read wobqqq/nova-aegis) while the core repository is private.
 
 ## 📄 License
 
