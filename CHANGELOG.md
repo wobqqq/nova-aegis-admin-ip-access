@@ -4,6 +4,8 @@ All notable changes are documented here. The format follows [Keep a Changelog](h
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-10-01
+
 ### Added
 
 - Laravel 13 support; CI runs the suite on Laravel 12 and 13.
@@ -34,6 +36,7 @@ All notable changes are documented here. The format follows [Keep a Changelog](h
 - The *Nova routes behind Admin IP Access* check, naming Nova routes registered outside Nova's middleware.
 - `aegis:admin-ip-access:add-ip` (validated, never twice) and `aegis:admin-ip-access:disable` console commands.
 
-[Unreleased]: https://github.com/wobqqq/nova-aegis-admin-ip-access/compare/v1.0.1...HEAD
+[Unreleased]: https://github.com/wobqqq/nova-aegis-admin-ip-access/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/wobqqq/nova-aegis-admin-ip-access/compare/v1.0.1...v1.1.0
 [1.0.1]: https://github.com/wobqqq/nova-aegis-admin-ip-access/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/wobqqq/nova-aegis-admin-ip-access/releases/tag/v1.0.0
