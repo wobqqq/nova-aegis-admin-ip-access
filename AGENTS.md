@@ -15,17 +15,18 @@ This is a **security product installed on production applications**. A bug here 
 Everything runs in Docker; the host needs no PHP.
 
 ```bash
-make install        # composer install (the core from ../nova-aegis, Nova from nova.laravel.com)
+make install        # composer install (the core from ../nova-aegis, Nova from the test double in stubs/nova)
 make code.fix       # composer normalize, Rector, PHP CS Fixer
 make code.check     # validate --strict, normalize --dry-run, composer audit, php -l, cs, Rector, PHPStan max
 make test           # Pest
 make test.coverage  # Pest with pcov, failing below 90 %
 make ready          # all of the above
+make test.nova      # optional: the PHP suite on the real Nova (needs a license)
 ```
 
 `make ready` must pass. PHPStan runs at `level: max` with strict rules and **no baseline**: fix the type, never add an ignore. Advisories from `composer audit` are fixed by updating the package, never ignored.
 
-The Aegis core is not on Packagist yet: `composer.json` reads it from the path repository `../nova-aegis`, so the core must be checked out next to this repository. `docker-compose.yaml` mounts it read-only at `/work/nova-aegis`. Installing Nova needs a license: `auth.json` (gitignored and export-ignored) holds the credentials. Never read, print or commit it.
+The Aegis core is not on Packagist yet: `composer.json` reads it from the path repository `../nova-aegis`, so the core must be checked out next to this repository. `docker-compose.yaml` mounts it read-only at `/work/nova-aegis`. No Nova license is needed: `laravel/nova` resolves to the test double in `stubs/nova` (see *Tests*). `make test.nova` runs the PHP suite on the real Nova and is the only command that needs a license, read from `auth.json` (gitignored and export-ignored). Never read, print or commit it.
 
 ## How the code is laid out
 
@@ -42,6 +43,7 @@ The Aegis core is not on Packagist yet: `composer.json` reads it from the path r
 | `src/Console/` | `aegis:admin-ip-access:add-ip` and `aegis:admin-ip-access:disable`, the recovery path. |
 | `resources/views/denied.blade.php` | The default 403 page. |
 | `resources/lang/en/admin-ip-access.php` | Every label and message, under `aegis-admin-ip-access::admin-ip-access.*`. |
+| `stubs/nova/` | The Nova test double the suite and PHPStan run on (export-ignored). |
 
 ### How the module uses the core
 
@@ -99,7 +101,9 @@ Read the `package-upgrades` skill before changing anything that reaches an appli
 
 ## Tests
 
-Pest 4 on Orchestra Testbench with the real `laravel/nova` and the Aegis core (SQLite in memory). No test reaches the network. Read the `package-testing` skill.
+Pest 4 on Orchestra Testbench with the Aegis core (SQLite in memory). No test reaches the network. Read the `package-testing` skill.
+
+`laravel/nova` is the test double in `stubs/nova`: a path repository (`"versions": {"laravel/nova": "5.99.0"}`, symlinked) declared in `composer.json`, so `make install`, CI and PHPStan need no license; the `require` stays `laravel/nova: ^5.0`, and applications get the real Nova because a dependency's repositories are ignored. It is a verbatim copy of the core's `stubs/nova`: never change it here. When the module starts using a Nova API the double lacks, add it to the core's `stubs/nova` first (a pull request there, with the real signature), then copy the directory here; check the change with `make test.nova` when you have a license.
 
 ## Git workflow
 

@@ -12,7 +12,7 @@ metadata:
 
 # Nova development (this module)
 
-The module has no Nova tool or Vue code of its own: its settings are a section of the Aegis page, drawn from `fields()`. Check Nova's own source in `vendor/laravel/nova` for version-specific behaviour before relying on it.
+The module has no Nova tool or Vue code of its own: its settings are a section of the Aegis page, drawn from `fields()`. `vendor/laravel/nova` here is the test double in `stubs/nova`, not Nova: check version-specific behaviour in a real Nova install before relying on it, and when the module starts using a Nova class or method the double lacks, add it to the core's `stubs/nova` with its real signature, then copy the directory here (see `package-testing`).
 
 ## How Nova routes get their middleware
 
