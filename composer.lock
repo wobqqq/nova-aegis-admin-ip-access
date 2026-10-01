@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "99929808912d732a9c604b78768157b3",
+    "content-hash": "828f3e6419b436ac92e21babe089d9c9",
     "packages": [
         {
             "name": "brick/math",
@@ -5950,7 +5950,7 @@
             "dist": {
                 "type": "path",
                 "url": "../nova-aegis",
-                "reference": "1b9c683db60d0806793dfbe0f609bfc4840b3119"
+                "reference": "ffdac96fb4c631a433eb24207c3e48cfb09bcc1a"
             },
             "require": {
                 "laravel/framework": "^12.0 || ^13.0",
@@ -5970,7 +5970,7 @@
                 "phpstan/phpstan-deprecation-rules": "^2.0",
                 "phpstan/phpstan-strict-rules": "^2.0",
                 "rector/rector": "^2.2",
-                "shipmonk/phpstan-rules": "*"
+                "shipmonk/phpstan-rules": "^4.4"
             },
             "type": "library",
             "extra": {
