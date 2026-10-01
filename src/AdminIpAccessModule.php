@@ -5,21 +5,23 @@ declare(strict_types=1);
 namespace Wobqqq\AegisAdminIpAccess;
 
 use Closure;
+use Override;
 use Wobqqq\Aegis\Checks\CheckResult;
 use Wobqqq\Aegis\Contracts\Module;
 use Wobqqq\Aegis\Settings\Field;
 use Wobqqq\AegisAdminIpAccess\Rules\CoversCurrentIp;
 use Wobqqq\AegisAdminIpAccess\Rules\IpOrSubnet;
+use Wobqqq\AegisAdminIpAccess\Support\Message;
 
 final readonly class AdminIpAccessModule implements Module
 {
-    public const KEY = 'admin-ip-access';
+    public const string KEY = 'admin-ip-access';
 
-    public const DEFAULT_VIEW = 'aegis-admin-ip-access::denied';
+    public const string DEFAULT_VIEW = 'aegis-admin-ip-access::denied';
 
-    public const VIEW_PATTERN = '/^(?:[A-Za-z0-9_-]+::)?[A-Za-z0-9_-]+(?:\.[A-Za-z0-9_-]+)*$/';
+    public const string VIEW_PATTERN = '/^(?:[A-Za-z0-9_-]+::)?[A-Za-z0-9_-]+(?:\.[A-Za-z0-9_-]+)*$/';
 
-    public const MAX_ENTRIES = 100;
+    public const int MAX_ENTRIES = 100;
 
     /**
      * @param Closure(): ?string $currentIp the address of the administrator using the Aegis page, null in the console
@@ -28,24 +30,28 @@ final readonly class AdminIpAccessModule implements Module
     {
     }
 
+    #[Override]
     public function key(): string
     {
         return self::KEY;
     }
 
+    #[Override]
     public function label(): string
     {
-        return (string)__('aegis-admin-ip-access::admin-ip-access.label');
+        return Message::get('aegis-admin-ip-access::admin-ip-access.label');
     }
 
+    #[Override]
     public function description(): string
     {
-        return (string)__('aegis-admin-ip-access::admin-ip-access.description');
+        return Message::get('aegis-admin-ip-access::admin-ip-access.description');
     }
 
     /**
      * The administrator's own address is preset, so that the first list saved lets them in.
      */
+    #[Override]
     public function defaults(): array
     {
         $ip = $this->currentIp();
@@ -57,6 +63,7 @@ final readonly class AdminIpAccessModule implements Module
         ];
     }
 
+    #[Override]
     public function rules(): array
     {
         return [
@@ -69,11 +76,15 @@ final readonly class AdminIpAccessModule implements Module
         ];
     }
 
+    /**
+     * @return list<Field>
+     */
+    #[Override]
     public function fields(): array
     {
-        $field = static fn (string $name): string => (string)__('aegis-admin-ip-access::admin-ip-access.fields.' . $name);
+        $field = static fn (string $name): string => Message::get('aegis-admin-ip-access::admin-ip-access.fields.' . $name);
         $ip = $this->currentIp();
-        $help = static fn (string $name): string => (string)__('aegis-admin-ip-access::admin-ip-access.help.' . $name, ['max' => self::MAX_ENTRIES, 'ip' => (string)$ip]);
+        $help = static fn (string $name): string => Message::get('aegis-admin-ip-access::admin-ip-access.help.' . $name, ['max' => self::MAX_ENTRIES, 'ip' => (string)$ip]);
 
         return [
             Field::toggle('enabled', $field('enabled'), $help('enabled')),
@@ -85,17 +96,18 @@ final readonly class AdminIpAccessModule implements Module
         ];
     }
 
+    #[Override]
     public function status(array $values): CheckResult
     {
         $list = AccessList::fromArray($values);
         $label = $this->label();
 
         if (!$list->enabled) {
-            return CheckResult::warn(self::KEY, $label, (string)__('aegis-admin-ip-access::admin-ip-access.status.off'));
+            return CheckResult::warn(self::KEY, $label, Message::get('aegis-admin-ip-access::admin-ip-access.status.off'));
         }
 
         if ($list->isEmpty()) {
-            return CheckResult::warn(self::KEY, $label, (string)__('aegis-admin-ip-access::admin-ip-access.status.empty'));
+            return CheckResult::warn(self::KEY, $label, Message::get('aegis-admin-ip-access::admin-ip-access.status.empty'));
         }
 
         return CheckResult::pass(self::KEY, $label, trans_choice('aegis-admin-ip-access::admin-ip-access.status.on', $list->count()));

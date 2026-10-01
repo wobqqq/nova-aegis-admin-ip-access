@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Illuminate\Support\Facades\Artisan;
 use Wobqqq\Aegis\Aegis;
+use Wobqqq\Aegis\Settings\AegisSetting;
 use Wobqqq\AegisAdminIpAccess\AdminIpAccessModule;
 use Wobqqq\AegisAdminIpAccess\Tests\Fixtures\Addresses;
 
@@ -12,7 +13,7 @@ use Wobqqq\AegisAdminIpAccess\Tests\Fixtures\Addresses;
  */
 function listed(): array
 {
-    $ips = Aegis::settings(AdminIpAccessModule::KEY)['ips'];
+    $ips = Aegis::settings(AdminIpAccessModule::KEY)['ips'] ?? null;
 
     return is_array($ips) ? array_values($ips) : [];
 }
@@ -82,7 +83,7 @@ it('turns itself off from the console and keeps the whitelist', function (): voi
 });
 
 it('turns itself off even when the stored values would fail the rules', function (): void {
-    Wobqqq\Aegis\Settings\AegisSetting::query()->create(['section' => AdminIpAccessModule::KEY, 'values' => [
+    AegisSetting::query()->create(['section' => AdminIpAccessModule::KEY, 'values' => [
         'enabled' => true,
         'ips' => [['ip' => 'garbage'], ['ip' => Addresses::ADMIN, 'note' => ['x']], 'row'],
         'view' => '../secret',
@@ -92,9 +93,9 @@ it('turns itself off even when the stored values would fail the rules', function
         ->and(Aegis::settings(AdminIpAccessModule::KEY))->toBe(['enabled' => false, 'ips' => [['ip' => Addresses::ADMIN, 'note' => '']], 'view' => AdminIpAccessModule::DEFAULT_VIEW]);
 });
 
-it('never sees an administrator\'s address in the console', function (): void {
+it("never sees an administrator's address in the console", function (): void {
     $module = new AdminIpAccessModule(static fn (): ?string => app()->runningInConsole() ? null : '192.0.2.1');
 
-    expect($module->defaults()['ips'])->toBe([])
-        ->and(resolve(AdminIpAccessModule::class)->defaults()['ips'])->toBe([]);
+    expect($module->defaults())->toHaveKey('ips', [])
+        ->and(resolve(AdminIpAccessModule::class)->defaults())->toHaveKey('ips', []);
 });

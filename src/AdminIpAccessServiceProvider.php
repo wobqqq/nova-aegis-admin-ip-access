@@ -11,6 +11,7 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
+use Override;
 use Wobqqq\Aegis\Aegis;
 use Wobqqq\Aegis\Events\SettingsSaved;
 use Wobqqq\AegisAdminIpAccess\Checks\NovaRoutesCheck;
@@ -24,10 +25,11 @@ final class AdminIpAccessServiceProvider extends ServiceProvider
      * Every Nova route passes one of these groups: pages and tools through `nova` and `nova:serving`,
      * the API and assets through `nova:api`, sign-in through `nova:auth`.
      */
-    public const NOVA_GROUPS = ['nova', 'nova:api', 'nova:auth', 'nova:serving'];
+    public const array NOVA_GROUPS = ['nova', 'nova:api', 'nova:auth', 'nova:serving'];
 
-    public const NOVA_CONFIG = ['nova.middleware', 'nova.api_middleware'];
+    public const array NOVA_CONFIG = ['nova.middleware', 'nova.api_middleware'];
 
+    #[Override]
     public function register(): void
     {
         $this->app->singleton(AdminIpAccessModule::class, static fn (Application $app): AdminIpAccessModule => new AdminIpAccessModule(

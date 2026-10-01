@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 return [
     'label' => 'Admin IP Access',
-    'description' => 'Opens Nova (its pages, its API and the tools\' routes) only to the listed IP addresses and subnets. Any other address gets a 403.',
+    'description' => "Opens Nova (its pages, its API and the tools' routes) only to the listed IP addresses and subnets. Any other address gets a 403.",
 
     'fields' => [
         'enabled' => 'Restrict Nova to the listed addresses',
@@ -18,7 +18,7 @@ return [
         'enabled' => 'While the list is empty every address is let in, so a mistake never locks every administrator out.',
         'ips' => 'IPv4 or IPv6 addresses and CIDR subnets, up to :max entries.',
         'current_ip' => 'Your address is :ip: an enabled list has to include it.',
-        'view' => 'The Blade view answered with a 403 to any other address. A view that does not exist falls back to the module\'s page.',
+        'view' => "The Blade view answered with a 403 to any other address. A view that does not exist falls back to the module's page.",
     ],
 
     'status' => [
@@ -31,8 +31,8 @@ return [
         'routes' => [
             'label' => 'Nova routes behind Admin IP Access',
             'off' => 'Admin IP Access is off.',
-            'pass' => 'Every Nova route checks the visitor\'s address.',
-            'fail' => ':count Nova routes skip the address check: :routes. Register them with Nova\'s middleware groups.',
+            'pass' => "Every Nova route checks the visitor's address.",
+            'fail' => ":count Nova routes skip the address check: :routes. Register them with Nova's middleware groups.",
         ],
     ],
 

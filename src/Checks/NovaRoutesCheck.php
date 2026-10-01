@@ -7,30 +7,33 @@ namespace Wobqqq\AegisAdminIpAccess\Checks;
 use Illuminate\Routing\Route;
 use Illuminate\Routing\Router;
 use Laravel\Nova\Nova;
+use Override;
 use Wobqqq\Aegis\Aegis;
 use Wobqqq\Aegis\Checks\CheckResult;
 use Wobqqq\Aegis\Contracts\Check;
 use Wobqqq\AegisAdminIpAccess\AccessList;
 use Wobqqq\AegisAdminIpAccess\AdminIpAccessModule;
 use Wobqqq\AegisAdminIpAccess\Http\Middleware\RestrictNovaAccess;
+use Wobqqq\AegisAdminIpAccess\Support\Message;
 
 /**
  * Finds the Nova routes a package or the application registered outside Nova's middleware groups.
  */
 final readonly class NovaRoutesCheck implements Check
 {
-    private const KEY = 'admin_ip_access_routes';
+    private const string KEY = 'admin_ip_access_routes';
 
     public function __construct(private Router $router)
     {
     }
 
+    #[Override]
     public function run(): CheckResult
     {
-        $label = (string)__('aegis-admin-ip-access::admin-ip-access.checks.routes.label');
+        $label = Message::get('aegis-admin-ip-access::admin-ip-access.checks.routes.label');
 
         if (!AccessList::fromArray(Aegis::settings(AdminIpAccessModule::KEY))->enabled) {
-            return CheckResult::info(self::KEY, $label, (string)__('aegis-admin-ip-access::admin-ip-access.checks.routes.off'));
+            return CheckResult::info(self::KEY, $label, Message::get('aegis-admin-ip-access::admin-ip-access.checks.routes.off'));
         }
 
         $unguarded = [];
@@ -42,10 +45,10 @@ final readonly class NovaRoutesCheck implements Check
         }
 
         if ($unguarded === []) {
-            return CheckResult::pass(self::KEY, $label, (string)__('aegis-admin-ip-access::admin-ip-access.checks.routes.pass'));
+            return CheckResult::pass(self::KEY, $label, Message::get('aegis-admin-ip-access::admin-ip-access.checks.routes.pass'));
         }
 
-        return CheckResult::fail(self::KEY, $label, (string)__('aegis-admin-ip-access::admin-ip-access.checks.routes.fail', [
+        return CheckResult::fail(self::KEY, $label, Message::get('aegis-admin-ip-access::admin-ip-access.checks.routes.fail', [
             'count' => count($unguarded),
             'routes' => implode(', ', array_slice($unguarded, 0, 5)),
         ]));

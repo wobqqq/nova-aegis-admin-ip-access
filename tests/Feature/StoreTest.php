@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 use Illuminate\Contracts\Cache\Repository as CacheRepository;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
+use Mockery\MockInterface;
+use Wobqqq\Aegis\Events\SettingsSaved;
 use Wobqqq\AegisAdminIpAccess\AccessList;
 use Wobqqq\AegisAdminIpAccess\AccessListStore;
 use Wobqqq\AegisAdminIpAccess\Tests\Fixtures\Addresses;
@@ -16,7 +19,7 @@ it('reads the list from the cache on a Nova request, without a database query', 
     app()->forgetScopedInstances();
 
     $queries = 0;
-    Illuminate\Support\Facades\DB::listen(static function () use (&$queries): void {
+    DB::listen(static function () use (&$queries): void {
         $queries++;
     });
 
@@ -32,7 +35,7 @@ it('clears its cache when the section is saved, and only then', function (): voi
 
     expect(Cache::has(AccessListStore::CACHE_KEY))->toBeTrue();
 
-    event(new Wobqqq\Aegis\Events\SettingsSaved('hardening', []));
+    event(new SettingsSaved('hardening', []));
     expect(Cache::has(AccessListStore::CACHE_KEY))->toBeTrue();
 
     whitelist(['enabled' => false]);
@@ -56,7 +59,7 @@ it('rebuilds a cached list of another shape', function (mixed $cached): void {
 it('keeps guarding when the cache store is down', function (): void {
     whitelist();
 
-    /** @var CacheRepository&Mockery\MockInterface $cache */
+    /** @var CacheRepository&MockInterface $cache */
     $cache = Mockery::mock(CacheRepository::class);
     $cache->allows('get')->andThrow(new RuntimeException('cache down'));
     $cache->allows('put')->andThrow(new RuntimeException('cache down'));
