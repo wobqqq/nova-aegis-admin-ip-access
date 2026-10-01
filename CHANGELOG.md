@@ -4,6 +4,8 @@ All notable changes are documented here. The format follows [Keep a Changelog](h
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-10-01
+
 ### Added
 
 - The Admin IP Access section on the Aegis page: open Nova only to listed IPv4 and IPv6 addresses and CIDR subnets, off until enabled.
@@ -13,3 +15,6 @@ All notable changes are documented here. The format follows [Keep a Changelog](h
 - A configurable 403 view, with the module's own page as the fallback, and a JSON answer for the Nova API and the tools.
 - The *Nova routes behind Admin IP Access* check, naming Nova routes registered outside Nova's middleware.
 - `aegis:admin-ip-access:add-ip` (validated, never twice) and `aegis:admin-ip-access:disable` console commands.
+
+[Unreleased]: https://github.com/wobqqq/nova-aegis-admin-ip-access/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/wobqqq/nova-aegis-admin-ip-access/releases/tag/v1.0.0
