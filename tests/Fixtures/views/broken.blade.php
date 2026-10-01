@@ -1,0 +1,1 @@
+<p>{{ $undefined->property }}</p>
