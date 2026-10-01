@@ -29,14 +29,29 @@
 
 ## 📥 Installation
 
+### 1. Install the package
+
 ```bash
 composer require wobqqq/nova-aegis-admin-ip-access
+```
+
+The service provider is discovered automatically.
+
+### 2. Run the migrations
+
+```bash
 php artisan migrate
 ```
 
-The service provider is discovered automatically. `php artisan migrate` creates the Aegis settings table if the core is new to the application; the module has no migration of its own.
+This creates the Aegis settings table if the core is new to the application; the module adds no table of its own.
 
-Then open **Aegis → Settings → Admin IP Access** in Nova:
+### 3. Set up Aegis (once per application)
+
+If Aegis is new to the application, register its tool and define the `viewAegis` gate as the [Aegis README](https://github.com/wobqqq/nova-aegis#-installation) describes. Skip this step if you already use another Aegis module.
+
+### 4. Turn it on in Nova
+
+Open **Aegis → Settings → Admin IP Access** in Nova:
 
 1. check the list: your current address is already in it;
 2. add the other addresses or subnets that need Nova (an office, a VPN, a deployment host), with a note for each;
