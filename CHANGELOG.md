@@ -4,9 +4,13 @@ All notable changes are documented here. The format follows [Keep a Changelog](h
 
 ## [Unreleased]
 
+## [1.0.1] - 2026-10-01
+
 ### Changed
 
 - Development and CI run on a test double of Nova (`stubs/nova`, not shipped) and need no Nova license; `make test.nova` runs the PHP suite on the real Nova. Nothing changes for applications.
+- The README splits the installation into numbered steps.
+- The Dependabot config no longer reads the Nova registry.
 
 ## [1.0.0] - 2026-10-01
 
@@ -20,5 +24,6 @@ All notable changes are documented here. The format follows [Keep a Changelog](h
 - The *Nova routes behind Admin IP Access* check, naming Nova routes registered outside Nova's middleware.
 - `aegis:admin-ip-access:add-ip` (validated, never twice) and `aegis:admin-ip-access:disable` console commands.
 
-[Unreleased]: https://github.com/wobqqq/nova-aegis-admin-ip-access/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/wobqqq/nova-aegis-admin-ip-access/compare/v1.0.1...HEAD
+[1.0.1]: https://github.com/wobqqq/nova-aegis-admin-ip-access/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/wobqqq/nova-aegis-admin-ip-access/releases/tag/v1.0.0
