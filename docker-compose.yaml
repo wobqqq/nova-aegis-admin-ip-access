@@ -1,0 +1,15 @@
+# The Aegis core is installed from the sibling checkout ../nova-aegis (a Composer
+# path repository) until it is on Packagist; it is mounted read-only.
+services:
+    php:
+        build: docker/php
+        image: wobqqq/oc-php:8.4
+        user: '${UID:-1000}:${GID:-1000}'
+        working_dir: /work/nova-aegis-admin-ip-access
+        volumes:
+            - .:/work/nova-aegis-admin-ip-access
+            - ../nova-aegis:/work/nova-aegis:ro
+            - composer-cache:/tmp/composer
+
+volumes:
+    composer-cache:
