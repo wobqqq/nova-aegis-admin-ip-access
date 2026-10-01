@@ -51,8 +51,8 @@ final class AddIpCommand extends Command
                 'ips' => $rows,
                 'view' => AccessList::view(Values::string($values, 'view')),
             ]);
-        } catch (ValidationException $e) {
-            $this->components->error(implode(' ', $e->validator->errors()->all()));
+        } catch (ValidationException $validationException) {
+            $this->components->error(implode(' ', $validationException->validator->errors()->all()));
 
             return self::FAILURE;
         }

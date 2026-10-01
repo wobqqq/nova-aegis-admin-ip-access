@@ -4,7 +4,7 @@ Guidance for coding agents working in this repository.
 
 ## What this is
 
-**Admin IP Access** (`wobqqq/nova-aegis-admin-ip-access`) is a module of [Aegis](https://github.com/wobqqq/nova-aegis), the security suite for Laravel Nova (Laravel 12, PHP 8.2+). It opens Nova (its pages, its sign-in, its API under `nova-api` and every tool under `nova-vendor`) only to the IP addresses and CIDR subnets on a whitelist, and answers any other address with a 403. The rest of the application is not affected.
+**Admin IP Access** (`wobqqq/nova-aegis-admin-ip-access`) is a module of [Aegis](https://github.com/wobqqq/nova-aegis), the security suite for Laravel Nova (Laravel 12 or 13, PHP 8.4+). It opens Nova (its pages, its sign-in, its API under `nova-api` and every tool under `nova-vendor`) only to the IP addresses and CIDR subnets on a whitelist, and answers any other address with a 403. The rest of the application is not affected.
 
 It is the Nova port of the October CMS module `oc-fortify-admin-ip-access-plugin`, with the fixes made there carried over (see *Lessons from the October version*).
 

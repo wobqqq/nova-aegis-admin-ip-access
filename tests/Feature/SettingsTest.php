@@ -29,7 +29,7 @@ it('registers its section with Aegis', function (): void {
         ->and(Aegis::settings(AdminIpAccessModule::KEY))->toBe(['enabled' => false, 'ips' => [], 'view' => AdminIpAccessModule::DEFAULT_VIEW]);
 });
 
-it('presets the administrator\'s own address and names it on the form', function (): void {
+it("presets the administrator's own address and names it on the form", function (): void {
     asAdminFrom(Addresses::ADMIN, 'GET', '/nova-vendor/aegis/settings')
         ->assertOk()
         ->assertJsonPath('sections.2.key', AdminIpAccessModule::KEY)
@@ -53,7 +53,7 @@ it('refuses an enabled list that would lock out the administrator saving it', fu
         ->assertUnprocessable()
         ->assertJsonValidationErrors(['ips' => 'The list does not include your address ' . Addresses::STRANGER . ': saving it would lock you out of Nova.']);
 
-    expect(Aegis::settings(AdminIpAccessModule::KEY)['enabled'])->toBeFalse();
+    expect(Aegis::settings(AdminIpAccessModule::KEY))->toHaveKey('enabled', false);
 });
 
 it('saves such a list while the module is off, or when the list is empty', function (bool $enabled, array $ips): void {
@@ -93,7 +93,7 @@ it('refuses a save from a stranger before the controller is reached', function (
 
     withServerVariables(['REMOTE_ADDR' => Addresses::STRANGER])->putJson('/nova-vendor/aegis/settings/admin-ip-access', section([]))->assertForbidden();
 
-    expect(Aegis::settings(AdminIpAccessModule::KEY)['enabled'])->toBeTrue();
+    expect(Aegis::settings(AdminIpAccessModule::KEY))->toHaveKey('enabled', true);
 });
 
 it('reports its state on the dashboard', function (array $values, Status $status, string $message): void {

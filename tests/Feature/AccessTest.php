@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\View;
 use Wobqqq\AegisAdminIpAccess\Http\Middleware\RestrictNovaAccess;
 use Wobqqq\AegisAdminIpAccess\Tests\Fixtures\Addresses;
@@ -73,7 +76,7 @@ it('applies a saved list at once, without waiting for the cache to expire', func
 });
 
 it('sits in front of every Nova middleware group and config list', function (): void {
-    $groups = resolve(Illuminate\Routing\Router::class)->getMiddlewareGroups();
+    $groups = resolve(Router::class)->getMiddlewareGroups();
 
     foreach (['nova', 'nova:api', 'nova:auth', 'nova:serving'] as $group) {
         expect(data_get($groups, $group . '.0'))->toBe(RestrictNovaAccess::class);
@@ -86,8 +89,8 @@ it('sits in front of every Nova middleware group and config list', function (): 
 it('checks a request once however many Nova groups it passes', function (): void {
     whitelist();
     $middleware = resolve(RestrictNovaAccess::class);
-    $request = Illuminate\Http\Request::create('/nova/probe', server: ['REMOTE_ADDR' => Addresses::STRANGER]);
-    $next = static fn (): Symfony\Component\HttpFoundation\Response => new Illuminate\Http\Response('next');
+    $request = Request::create('/nova/probe', server: ['REMOTE_ADDR' => Addresses::STRANGER]);
+    $next = static fn (): Symfony\Component\HttpFoundation\Response => new Response('next');
 
     expect($middleware->handle($request, $next)->getStatusCode())->toBe(403);
 

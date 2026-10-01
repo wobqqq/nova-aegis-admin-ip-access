@@ -16,9 +16,9 @@ final class AccessListStore
     /**
      * Part of the cache key: a release that changes what is cached bumps it.
      */
-    public const CACHE_KEY = 'aegis.admin-ip-access.v1';
+    public const string CACHE_KEY = 'aegis.admin-ip-access.v1';
 
-    private const TTL = 3600;
+    private const int TTL = 3600;
 
     private ?AccessList $list = null;
 

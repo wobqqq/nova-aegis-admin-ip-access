@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Illuminate\Http\Request;
 use Illuminate\Testing\TestResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Wobqqq\Aegis\Aegis;
 use Wobqqq\AegisAdminIpAccess\AdminIpAccessModule;
 use Wobqqq\AegisAdminIpAccess\Tests\Fixtures\Addresses;
@@ -39,7 +40,7 @@ function whitelist(array $values = []): array
 }
 
 /**
- * @return TestResponse<Symfony\Component\HttpFoundation\Response>
+ * @return TestResponse<Response>
  */
 function visitFrom(string $uri, string $ip, bool $json = false): TestResponse
 {
@@ -53,7 +54,7 @@ function visitFrom(string $uri, string $ip, bool $json = false): TestResponse
  *
  * @param array<string, mixed> $data
  *
- * @return TestResponse<Symfony\Component\HttpFoundation\Response>
+ * @return TestResponse<Response>
  */
 function asAdminFrom(string $ip, string $method, string $uri, array $data = []): TestResponse
 {
