@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Wobqqq\Aegis\Settings\AegisSetting;
@@ -24,6 +25,11 @@ arch('no debugging calls are left behind')
 arch('value objects are immutable')
     ->expect([AccessList::class, AdminIpAccessModule::class])
     ->toBeReadonly();
+
+arch('the recovery actions are readonly and know nothing of the console')
+    ->expect('Wobqqq\AegisAdminIpAccess\Actions')
+    ->toBeReadonly()
+    ->not->toUse(['Illuminate\Console', Request::class]);
 
 arch('the module reads its settings through the Aegis core, never the table')
     ->expect('Wobqqq\AegisAdminIpAccess')

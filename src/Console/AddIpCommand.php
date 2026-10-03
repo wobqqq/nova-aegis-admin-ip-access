@@ -6,10 +6,8 @@ namespace Wobqqq\AegisAdminIpAccess\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Validation\ValidationException;
-use Wobqqq\Aegis\Aegis;
-use Wobqqq\Aegis\Support\Values;
-use Wobqqq\AegisAdminIpAccess\AccessList;
-use Wobqqq\AegisAdminIpAccess\AdminIpAccessModule;
+use Wobqqq\AegisAdminIpAccess\Actions\AddIpToWhitelist;
+use Wobqqq\AegisAdminIpAccess\Actions\WhitelistEntry;
 use Wobqqq\AegisAdminIpAccess\Support\Ip;
 
 final class AddIpCommand extends Command
@@ -22,42 +20,29 @@ final class AddIpCommand extends Command
     /** @var string */
     protected $description = 'Add an IP address or a subnet to the Admin IP Access whitelist, for an administrator it locked out.';
 
-    public function handle(): int
+    public function handle(AddIpToWhitelist $addIp): int
     {
         $argument = $this->argument('ip');
-        $ip = Ip::normalize($argument);
+        $ip = is_string($argument) ? trim($argument) : '';
 
-        if ($ip === null) {
-            $this->components->error(sprintf('%s is not an IP address or a subnet.', mb_substr(is_string($argument) ? trim($argument) : '', 0, 100)));
+        if (Ip::normalize($ip) === null) {
+            $this->components->error(sprintf('%s is not an IP address or a subnet.', mb_substr($ip, 0, 100)));
 
             return self::FAILURE;
         }
 
-        $values = Aegis::settings(AdminIpAccessModule::KEY);
-        $rows = AccessList::rows($values['ips'] ?? []);
-
-        if (Ip::covered($ip, array_column($rows, 'ip'))) {
-            $this->components->info(sprintf('%s is already on the whitelist.', $ip));
-
-            return self::SUCCESS;
-        }
-
         $note = $this->option('note');
-        $rows[] = ['ip' => $ip, 'note' => is_string($note) ? mb_substr(trim($note), 0, 100) : ''];
+        $entry = new WhitelistEntry($ip, is_string($note) ? $note : '');
 
         try {
-            Aegis::save(AdminIpAccessModule::KEY, [
-                'enabled' => AccessList::fromArray($values)->enabled,
-                'ips' => $rows,
-                'view' => AccessList::view(Values::string($values, 'view')),
-            ]);
+            $added = $addIp->handle($entry);
         } catch (ValidationException $validationException) {
             $this->components->error(implode(' ', $validationException->validator->errors()->all()));
 
             return self::FAILURE;
         }
 
-        $this->components->info(sprintf('%s has been added to the whitelist.', $ip));
+        $this->components->info(sprintf($added ? '%s has been added to the whitelist.' : '%s is already on the whitelist.', $entry->ip));
 
         return self::SUCCESS;
     }
