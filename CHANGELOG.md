@@ -4,6 +4,10 @@ All notable changes are documented here. The format follows [Keep a Changelog](h
 
 ## [Unreleased]
 
+### Changed
+
+- Internal refactoring along the architecture skills, no change for applications: the recovery commands call actions (`AddIpToWhitelist`, `DisableAdminIpAccess`) that hold their work.
+
 ## [1.1.0] - 2026-10-01
 
 ### Added

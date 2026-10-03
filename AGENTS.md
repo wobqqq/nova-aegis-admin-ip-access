@@ -40,7 +40,8 @@ The Aegis core is not on Packagist yet: `composer.json` reads it from the path r
 | `src/Rules/` | `IpOrSubnet` (an address or a CIDR subnet) and `CoversCurrentIp` (the lock-out protection). |
 | `src/Support/Ip.php` | Parsing, the canonical notation and the "already covered" test. |
 | `src/Checks/NovaRoutesCheck.php` | An Aegis check that finds Nova routes registered outside Nova's middleware groups. |
-| `src/Console/` | `aegis:admin-ip-access:add-ip` and `aegis:admin-ip-access:disable`, the recovery path. |
+| `src/Console/` | `aegis:admin-ip-access:add-ip` and `aegis:admin-ip-access:disable`, the recovery path: they parse the input and call the actions. |
+| `src/Actions/` | `AddIpToWhitelist`, `DisableAdminIpAccess` and the `WhitelistEntry` they take. |
 | `resources/views/denied.blade.php` | The default 403 page. |
 | `resources/lang/en/admin-ip-access.php` | Every label and message, under `aegis-admin-ip-access::admin-ip-access.*`. |
 | `stubs/nova/` | The Nova test double the suite and PHPStan run on (export-ignored). |
@@ -94,6 +95,20 @@ Each of these was a bug there; each has a test here:
 - A saved list stayed cached for an hour and the lock-out rule could be skipped: the cache is cleared on every save of the section, and the rules are the module's own, applied on every save.
 - `add-ip` accepted anything and added an address twice: it validates, normalizes and refuses what the list already covers.
 - Broken stored values and a cached list of an older shape broke the check: both fall back to safe values and are rebuilt.
+
+## Architecture
+
+The architecture skills in `.claude/skills/` are the rules for how code is shaped; read the one that matches the change before writing it:
+
+- `application-layer`: entry points (middleware, controllers, console commands, the module's Nova pieces) only translate input and output; the work sits in classes named after what they do, with typed input.
+- `dependency-injection`: collaborators and configuration arrive through the constructor; facades stay in entry points; interfaces only at I/O boundaries (HTTP, sockets, the clock, processes).
+- `error-handling`, `validation`: failures are typed exceptions, never `null` or `false`; input shape is validated at the entry point, business rules where the work is done.
+- `events`: reactions run after the commit, from events that say what happened.
+- `testing-architecture`: unit tests for pure logic, feature tests for use cases, fakes only at boundaries.
+- `domain-layer-cqrs`: when (rarely) a separate domain layer or read side pays off.
+- `package-boundaries`: what is public API here and how it may change.
+
+In this module: the recovery commands parse their input and call the actions in `src/Actions/` (`AddIpToWhitelist` with a `WhitelistEntry`, `DisableAdminIpAccess`); the middleware stays a thin check against the cached `AccessList`.
 
 ## Upgrading installed applications safely
 
